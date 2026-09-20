@@ -1,5 +1,5 @@
 import collection from "../collection.config.js";
-import EntryCard from "../components/EntryCard";
+import EntryList from "../components/EntryList";
 import entries from "../data/entries";
 
 const styles = {
@@ -76,15 +76,7 @@ export default function Home() {
 
       <p style={styles.count}>entries in the archive: {entries.length} (for now)</p>
 
-      {entries.map((entry) => (
-        <EntryCard
-          key={entry.id}
-          title={entry.title}
-          description={entry.description}
-          contributor={entry.contributor}
-          place={entry.place}
-        />
-      ))}
+      <EntryList entries={entries} />
 
       <footer style={styles.footer}>
         Built in ICT 340 — Vibe Coding, American University of Phnom Penh, Fall
