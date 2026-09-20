@@ -1,4 +1,5 @@
 import collection from "../collection.config.js";
+import EntryCard from "../components/EntryCard";
 
 const styles = {
   wrap: {
@@ -73,6 +74,19 @@ export default function Home() {
       </div>
 
       <p style={styles.count}>entries in the archive: 0 (for now)</p>
+
+      <EntryCard
+        title="កប់សារី"
+        description="Amazingly cool, unbeatable. Mostly used when something surprising and unexpected happens."
+        contributor="Tatai"
+        place="Facebook"
+      />
+      <EntryCard
+        title="អេម"
+        description="Nice. A word used for a long time that went viral when the internet broke."
+        contributor="Pu Jork"
+        place="Facebook"
+      />
 
       <footer style={styles.footer}>
         Built in ICT 340 — Vibe Coding, American University of Phnom Penh, Fall
