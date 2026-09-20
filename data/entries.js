@@ -46,5 +46,30 @@ export default [
     contributor: "Naga - The Unknown",
     place: "TikTok",
     year: "2026"
+  },
+
+  {
+    id: 7,
+    title: "ដំឡូងមូល / Domlong Muol",
+    description: "Literally means “round potato,” but it’s usually used to describe someone who’s being clueless, silly, or just… not getting it. Basically, when your brain has left the group chat. 🥔😂",
+    contributor: "Unknown",
+    place: "Battambang",
+    year: "2018"
+  },
+  {
+    id: 8,
+    title: "ហានិភ័យ",
+    description: "Literally means “risk,” but online it can be used dramatically or sarcastically when something feels like a questionable decision. Like, “Should I do it?” — “ហានិភ័យ bro.” 😭",
+    contributor: "Unknown",
+    place: "Phnom Penh",
+    year: "2020"
+  },
+  {
+    id: 9,
+    title: "អត់ប្រាប់ ទុកឲឆ្ងល់",
+    description: "Literally: “I’m not telling you, let you wonder.” It’s the ultimate teasing move when you know the answer but choose to keep everyone suffering in curiosity. 😂",
+    contributor: "Unknown",
+    place: "Phom Penh",
+    year: "2020"
   }
-];
+  ];
