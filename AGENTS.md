@@ -28,3 +28,14 @@ One student's Khmer Living Archive, built in ICT 340 at AUPP. Every student buil
 - For anything beyond a one-file change, state a short plan before writing code.
 - Explain changes plainly. The student must be able to defend every line in a code review; write code and explanations that make that possible.
 - The student reviews and approves every diff. Expect rejections and make them easy: small steps, clear boundaries.
+
+## Sprint 2 amendment (added week 5)
+
+Two dependencies are approved for Sprint 2, and only these two:
+- @supabase/supabase-js
+- @supabase/ssr
+
+Everything else in the hard rules stands, especially rule 3:
+no keys, tokens, or passwords in any committed file, ever.
+Auth configuration lives in .env.local and in Vercel
+environment variables.
