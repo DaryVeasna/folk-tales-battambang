@@ -41,7 +41,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
+  
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -51,6 +51,7 @@ export default function SignupPage() {
       password,
     });
     if (error) {
+      console.error("signup error:", error.message);
       setError("Could not create account. Try a different email or a longer password.");
       return;
     }
