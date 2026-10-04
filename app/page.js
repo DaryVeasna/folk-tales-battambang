@@ -1,6 +1,6 @@
 import collection from "../collection.config.js";
 import EntryList from "../components/EntryList";
-import entries from "../data/entries";
+import { createClient } from "../lib/supabase/server";
 import AuthStatus from "../components/AuthStatus";
 
 const styles = {
@@ -59,7 +59,13 @@ const styles = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("entries")
+    .select("*")
+    .order("created_at", { ascending: false });
+  const entries = data ?? [];
   return (
     <main style={styles.wrap}>
       <AuthStatus />
@@ -78,7 +84,11 @@ export default function Home() {
 
       <p style={styles.count}>entries in the archive: {entries.length} (for now)</p>
 
+      {error ? (
+      <p style={styles.description}>The archive could not be loaded. Please try again.</p>
+      ) : (
       <EntryList entries={entries} />
+      )}
 
       <footer style={styles.footer}>
         Built in ICT 340 — Vibe Coding, American University of Phnom Penh, Fall

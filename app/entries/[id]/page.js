@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import EntryCard from "../../../components/EntryCard";
-import entries from "../../../data/entries";
+import { createClient } from "../../../lib/supabase/server";
 
 const styles = {
   wrap: {
@@ -13,7 +13,12 @@ const styles = {
 
 export default async function Page({ params }) {
   const { id } = await params;
-  const entry = entries.find((e) => e.id === Number(id));
+  const supabase = await createClient();
+  const { data: entry } = await supabase
+    .from("entries")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
 
   if (!entry) {
     notFound();
