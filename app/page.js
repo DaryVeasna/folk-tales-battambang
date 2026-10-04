@@ -1,6 +1,7 @@
 import collection from "../collection.config.js";
 import EntryList from "../components/EntryList";
 import entries from "../data/entries";
+import AuthStatus from "../components/AuthStatus";
 
 const styles = {
   wrap: {
@@ -61,6 +62,7 @@ const styles = {
 export default function Home() {
   return (
     <main style={styles.wrap}>
+      <AuthStatus />
       <p style={styles.kicker}>KHMER LIVING ARCHIVE</p>
       <h1 style={styles.title}>{collection.name}</h1>
       <p style={styles.description}>{collection.description}</p>
