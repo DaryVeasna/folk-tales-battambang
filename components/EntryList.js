@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import EntryCard from "./EntryCard";
+import Link from "next/link";
 
 export default function EntryList({ entries }) {
   const [query, setQuery] = useState("");
@@ -38,6 +39,11 @@ export default function EntryList({ entries }) {
       fontSize: 16,
       marginTop: 32,
     },
+    link: {
+      textDecoration: "none",
+      color: "inherit",
+      display: "block"
+    }
   };
 
   return (
@@ -56,13 +62,18 @@ export default function EntryList({ entries }) {
         <p style={styles.empty}>[No results found]</p>
       ) : (
         filtered.map((entry) => (
-          <EntryCard
+          <Link
             key={entry.id}
-            title={entry.title}
-            description={entry.description}
-            contributor={entry.contributor}
-            place={entry.place}
-          />
+            href={`/entries/${entry.id}`}
+            style={styles.link}
+          >
+            <EntryCard
+              title={entry.title}
+              description={entry.description}
+              contributor={entry.contributor}
+              place={entry.place}
+            />
+          </Link>
         ))
       )}
     </div>
