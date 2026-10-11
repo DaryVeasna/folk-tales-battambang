@@ -1,9 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import EntryCard from "../../../components/EntryCard";
+import DeleteButton from "../../../components/DeleteButton";
 import { createClient } from "../../../lib/supabase/server";
 
 const styles = {
+  actions: { display: "flex", gap: 12, alignItems: "center", marginTop: 24 },
+  editLink: {
+    padding: "8px 14px",
+    border: "1px solid #2EE6A8",
+    borderRadius: 8,
+    color: "#2EE6A8",
+    textDecoration: "none",
+  },
   wrap: {
     maxWidth: 720,
     margin: "0 auto",
@@ -32,6 +41,9 @@ export default async function Page({ params }) {
     notFound();
   }
 
+  const { data: userData } = await supabase.auth.getUser();
+  const isOwner = userData.user && entry.owner === userData.user.id;
+
   return (
     <div style={styles.wrap}>
       <Link href="/">
@@ -49,6 +61,14 @@ export default async function Page({ params }) {
           alt={entry.title}
           style={styles.photo}
         />
+      )}
+      {isOwner && (
+        <div style={styles.actions}>
+          <Link href={`/entries/${entry.id}/edit`} style={styles.editLink}>
+            Edit
+          </Link>
+        <DeleteButton id={entry.id} />
+        </div>
       )}
     </div>
   );
