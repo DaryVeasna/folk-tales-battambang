@@ -9,6 +9,14 @@ const styles = {
     margin: "0 auto",
     padding: "80px 24px",
   },
+  photo: {
+    display: "block",
+    maxWidth: "100%",
+    height: "auto",
+    marginTop: 24,
+    borderRadius: 10,
+    border: "1px solid #2E3644",
+  },
 };
 
 export default async function Page({ params }) {
@@ -35,6 +43,13 @@ export default async function Page({ params }) {
         contributor={entry.contributor}
         place={entry.place}
       />
+      {entry.photo && (
+        <img
+          src={entry.photo}
+          alt={entry.title}
+          style={styles.photo}
+        />
+      )}
     </div>
   );
 }
