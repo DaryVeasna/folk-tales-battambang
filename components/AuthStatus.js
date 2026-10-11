@@ -59,6 +59,10 @@ export default function AuthStatus() {
     <div style={styles.bar}>
       {user ? (
         <>
+          {/* new: link to the contribution form for logged-in users */}
+          <Link href="/contribute" style={styles.link}>
+            Contribute
+          </Link>
           <span style={styles.email}>{user.email}</span>
           <button onClick={handleLogout} style={styles.button}>
             Log out
