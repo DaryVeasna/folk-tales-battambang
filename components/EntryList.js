@@ -72,6 +72,7 @@ export default function EntryList({ entries }) {
               description={entry.description}
               contributor={entry.contributor}
               place={entry.place}
+              photo={entry.photo}
             />
           </Link>
         ))

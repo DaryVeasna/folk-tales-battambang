@@ -1,4 +1,4 @@
-export default function EntryCard({ title, description, contributor, place }) {
+export default function EntryCard({ title, description, contributor, place, photo }) {
   const styles = {
     card: {
       marginTop: 32,
@@ -22,10 +22,27 @@ export default function EntryCard({ title, description, contributor, place }) {
       fontWeight: 600,
       margin: "6px 0 12px",
     },
+    image: {
+      display: "block",
+      width: "100%",
+      maxHeight: 240,
+      objectFit: "cover",
+      borderRadius: 8,
+      marginBottom: 16,
+    },
   };
 
   return (
     <div style={styles.card}>
+      {photo && (
+        <img
+          src={photo}
+          alt={title}
+          loading="lazy"
+          style={styles.image}
+        />
+      )}
+
       <p style={styles.label}>TITLE</p>
       <p style={styles.titleValue}>{title}</p>
 
