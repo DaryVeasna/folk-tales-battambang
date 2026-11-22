@@ -1,6 +1,5 @@
 'use client';
 import { useRef } from 'react';
-import Link from 'next/link';
 import { useApp } from './Providers';
 
 // d = parallax strength in px, t = float duration, fx/fy = float distance
@@ -46,7 +45,6 @@ export default function Hero() {
       <h1 className="hero-title">{t('title')}</h1>
       <div className="hero-buttons">
         <a className="btn" href="#entries">{t('explore')}</a>
-        <Link className="btn" href="/practice">{t('practice')}</Link>
       </div>
 
       <svg className="wave" viewBox="0 0 2244 160" preserveAspectRatio="none" aria-hidden="true">
