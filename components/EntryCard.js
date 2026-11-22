@@ -1,59 +1,95 @@
-export default function EntryCard({ title, description, contributor, place, photo }) {
+export default function EntryCard({
+  title,
+  description,
+  contributor,
+  place,
+  photo,
+  accent = "var(--yellow)",
+  variant = "summary", // "summary" = list card, "detail" = opened entry
+  status = null, // "pending" | "published" | "returned" (optional)
+  statusLabel = null, // the words shown in the pill (optional)
+}) {
+  const isDetail = variant === "detail";
+
   const styles = {
     card: {
-      marginTop: 32,
-      padding: 24,
-      backgroundColor: "#1C222C",
-      border: "1px solid #2E3644",
-      borderRadius: 10,
+      padding: 28,
+      backgroundColor: "var(--surface)",
+      border: "3px solid var(--surface-border)",
+      borderRadius: 40,
+      boxShadow: `0 8px 0 ${accent}`,
+      color: "var(--text)",
     },
-    label: {
-      fontFamily: "'Courier New', monospace",
-      fontSize: 12,
-      color: "#97A1B3",
-      margin: 0,
-    },
-    value: {
-      fontSize: 16,
-      margin: "6px 0 0",
-    },
-    titleValue: {
-      fontSize: 20,
-      fontWeight: 600,
-      margin: "6px 0 12px",
-    },
-    image: {
+    media: {
       display: "block",
       width: "100%",
-      maxHeight: 240,
+      aspectRatio: "2 / 1",
       objectFit: "cover",
-      borderRadius: 8,
-      marginBottom: 16,
+      borderRadius: 28,
+      backgroundColor: "var(--placeholder)",
+    },
+    label: {
+      fontSize: 18,
+      fontWeight: 500,
+      margin: 0,
+    },
+    title: {
+      fontSize: 26,
+      fontWeight: 800,
+      lineHeight: 1.2,
+      margin: "6px 0 16px",
+    },
+    value: {
+      fontSize: 18,
+      fontWeight: 700,
+      lineHeight: 1.6,
+      margin: "6px 0 24px",
+    },
+    viewRow: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: statusLabel ? "space-between" : "flex-end",
     },
   };
 
+  // Real photo if there is one, otherwise the gray placeholder block
+  const media = photo ? (
+    <img src={photo} alt={title} loading="lazy" style={styles.media} />
+  ) : (
+    <div style={styles.media} aria-hidden="true" />
+  );
+
+  if (!isDetail) {
+    return (
+      <div style={styles.card}>
+        <div style={{ marginBottom: 20 }}>{media}</div>
+        <p style={styles.label}>Slang</p>
+        <p style={styles.title}>{title}</p>
+        <div style={styles.viewRow}>
+          <span className="view-detail">view detail</span>
+          {statusLabel && (
+            <span className={`status-pill status-${status}`}>{statusLabel}</span>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={styles.card}>
-      {photo && (
-        <img
-          src={photo}
-          alt={title}
-          loading="lazy"
-          style={styles.image}
-        />
-      )}
+      <p style={styles.label}>Slang</p>
+      <p style={styles.title}>{title}</p>
 
-      <p style={styles.label}>TITLE</p>
-      <p style={styles.titleValue}>{title}</p>
-
-      <p style={styles.label}>DESCRIPTION</p>
+      <p style={styles.label}>Description</p>
       <p style={styles.value}>{description}</p>
 
-      <p style={styles.label}>CONTRIBUTOR</p>
+      <p style={styles.label}>Contributor</p>
       <p style={styles.value}>{contributor}</p>
 
-      <p style={styles.label}>PLACE</p>
+      <p style={styles.label}>Place</p>
       <p style={styles.value}>{place}</p>
+
+      <div style={{ marginTop: 8 }}>{media}</div>
     </div>
   );
 }

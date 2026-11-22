@@ -36,21 +36,10 @@ export default function DeleteButton({ id }) {
 
   return (
     <>
-      <button
-        onClick={handleDelete}
-        disabled={busy}
-        style={{
-          padding: "8px 14px",
-          backgroundColor: "transparent",
-          border: "1px solid #FF6B6B",
-          borderRadius: 8,
-          color: "#FF6B6B",
-          cursor: busy ? "not-allowed" : "pointer",
-        }}
-      >
+      <button onClick={handleDelete} disabled={busy} className="btn-danger">
         {busy ? "Deleting…" : "Delete"}
       </button>
-      {message && <p style={{ color: "#FF6B6B", fontSize: 13 }}>{message}</p>}
+      {message && <p className="field-error">{message}</p>}
     </>
   );
 }

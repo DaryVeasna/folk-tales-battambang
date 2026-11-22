@@ -5,72 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "../lib/supabase/client";
 
-const styles = {
-  wrap: { maxWidth: 720, margin: "0 auto", padding: "80px 24px" },
-  title: { fontSize: 32, fontWeight: 700, margin: "0 0 8px" },
-  subtitle: { color: "#97A1B3", margin: "0 0 32px" },
-  form: { display: "flex", flexDirection: "column", gap: 20 },
-  field: { display: "flex", flexDirection: "column", gap: 6 },
-  label: {
-    fontFamily: "'Courier New', monospace",
-    fontSize: 12,
-    color: "#97A1B3",
-    margin: 0,
-  },
-  input: {
-    padding: "12px 16px",
-    backgroundColor: "#1C222C",
-    border: "1px solid #2E3644",
-    borderRadius: 10,
-    color: "#E8EDF2",
-    fontSize: 16,
-    outline: "none",
-    boxSizing: "border-box",
-    width: "100%",
-  },
-  inputError: { borderColor: "#FF6B6B" },
-  error: { color: "#FF6B6B", fontSize: 13, margin: 0, minHeight: 18 },
-  hint: { color: "#97A1B3", fontSize: 13, margin: 0 },
-  fileInput: {
-    padding: "12px 16px",
-    backgroundColor: "#1C222C",
-    border: "1px dashed #2E3644",
-    borderRadius: 10,
-    color: "#E8EDF2",
-    fontSize: 16,
-    outline: "none",
-    boxSizing: "border-box",
-    width: "100%",
-    cursor: "pointer",
-  },
-  button: {
-    width: "100%",
-    padding: "14px 16px",
-    backgroundColor: "#2EE6A8",
-    border: "none",
-    borderRadius: 10,
-    color: "#0F141B",
-    fontSize: 16,
-    fontWeight: 600,
-    cursor: "pointer",
-    marginTop: 8,
-  },
-  buttonDisabled: {
-    backgroundColor: "#2E3644",
-    color: "#5A6373",
-    cursor: "not-allowed",
-  },
-  loginPrompt: {
-    textAlign: "center",
-    padding: "48px 24px",
-    backgroundColor: "#1C222C",
-    border: "1px solid #2E3644",
-    borderRadius: 10,
-    color: "#97A1B3",
-  },
-  loginLink: { color: "#2EE6A8" },
-};
-
 const TEXT_FIELDS = [
   { name: "title", label: "Title", max: 100 },
   { name: "description", label: "Description", max: 500, multiline: true },
@@ -125,6 +59,7 @@ export default function EntryForm({ entry = null }) {
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [user, setUser] = useState(undefined); // undefined = checking, null = logged out
   const router = useRouter();
 
@@ -203,9 +138,12 @@ export default function EntryForm({ entry = null }) {
       if (isEdit) {
         // 4a. update: named columns, owner is never changed.
         // RLS refuses quietly (zero rows, no error), so check a row came back.
+        const { data: isReviewer } = await supabase.rpc('is_reviewer');
+        const updateValues = { ...values };
+        if (!isReviewer) updateValues.status = 'pending';
         const { data: rows, error: updateError } = await supabase
           .from("entries")
-          .update(values)
+          .update(updateValues)
           .eq("id", entry.id)
           .select("id");
         if (updateError || !rows || rows.length === 0) {
@@ -241,18 +179,18 @@ export default function EntryForm({ entry = null }) {
 
   if (user === undefined) {
     return (
-      <main style={styles.wrap}>
-        <p style={styles.subtitle}>Loading…</p>
+      <main className="form-wrap wide">
+        <p className="form-subtitle">Loading…</p>
       </main>
     );
   }
 
   if (user === null) {
     return (
-      <main style={styles.wrap}>
-        <div style={styles.loginPrompt}>
+      <main className="form-wrap wide">
+        <div className="prompt-card">
           <p>You need to be logged in to {isEdit ? "edit" : "contribute"} an entry.</p>
-          <Link href="/login" style={styles.loginLink}>
+          <Link href="/login" className="text-link">
             Log in
           </Link>
         </div>
@@ -260,19 +198,32 @@ export default function EntryForm({ entry = null }) {
     );
   }
 
+  if (submitted) {
+    return (
+      <main className="form-wrap wide">
+        <p className="form-subtitle">Contribution is processing, one moment...</p>
+        <p>
+          <Link href="/contribute" className="text-link">
+            Back to contribute
+          </Link>
+        </p>
+      </main>
+    );
+  }
+
   return (
-    <main style={styles.wrap}>
-      <h1 style={styles.title}>{isEdit ? "Edit entry" : "Contribute an entry"}</h1>
-      <p style={styles.subtitle}>
+    <main className="form-wrap wide">
+      <h1 className="form-title">{isEdit ? "Edit entry" : "Contribute an entry"}</h1>
+      <p className="form-subtitle">
         {isEdit ? "Update this entry." : "Add a Khmer slang entry to the archive."}
       </p>
 
-      <form style={styles.form} onSubmit={handleSubmit} noValidate>
+      <form className="entry-form" onSubmit={handleSubmit} noValidate>
         {TEXT_FIELDS.map((field) => {
           const Tag = field.multiline ? "textarea" : "input";
           return (
-            <div key={field.name} style={styles.field}>
-              <label htmlFor={field.name} style={styles.label}>
+            <div key={field.name} className="field">
+              <label htmlFor={field.name} className="field-label">
                 {field.label}
               </label>
               <Tag
@@ -281,22 +232,19 @@ export default function EntryForm({ entry = null }) {
                 value={formData[field.name]}
                 onChange={handleChange}
                 rows={field.multiline ? 4 : undefined}
-                style={{
-                  ...styles.input,
-                  ...(errors[field.name] ? styles.inputError : {}),
-                }}
+                className={`field-input${errors[field.name] ? " has-error" : ""}`}
               />
-              <p style={styles.error}>{errors[field.name] || ""}</p>
+              <p className="field-error">{errors[field.name] || ""}</p>
             </div>
           );
         })}
 
-        <div style={styles.field}>
-          <label htmlFor="photo" style={styles.label}>
+        <div className="field">
+          <label htmlFor="photo" className="field-label">
             Photo
           </label>
           {isEdit && (
-            <p style={styles.hint}>
+            <p className="field-hint">
               Optional. Leave empty to keep the current photo.
             </p>
           )}
@@ -306,24 +254,14 @@ export default function EntryForm({ entry = null }) {
             type="file"
             accept="image/jpeg,image/png,image/webp"
             onChange={handleChange}
-            style={{
-              ...styles.fileInput,
-              ...(errors.photo ? styles.inputError : {}),
-            }}
+            className={`file-input${errors.photo ? " has-error" : ""}`}
           />
-          <p style={styles.error}>{errors.photo || ""}</p>
+          <p className="field-error">{errors.photo || ""}</p>
         </div>
 
-        {formError && <p style={styles.error}>{formError}</p>}
+        {formError && <p className="field-error">{formError}</p>}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          style={{
-            ...styles.button,
-            ...(isSubmitting ? styles.buttonDisabled : {}),
-          }}
-        >
+        <button type="submit" disabled={isSubmitting} className="btn-primary">
           {isSubmitting ? "Saving…" : isEdit ? "Save changes" : "Submit entry"}
         </button>
       </form>
