@@ -11,15 +11,32 @@ export default function Header() {
   const path = usePathname();
   const router = useRouter();
   const [user, setUser] = useState(undefined); // undefined = checking, null = logged out
+  const [isReviewer, setIsReviewer] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
+
+    const checkReviewer = async (u) => {
+      if (!u) {
+        setIsReviewer(false);
+        return;
+      }
+      const { data } = await supabase.rpc('is_reviewer');
+      setIsReviewer(data === true);
+    };
+
     supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user ?? null);
+      const u = data.user ?? null;
+      setUser(u);
+      checkReviewer(u);
     });
+
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setUser(session?.user ?? null);
+        const u = session?.user ?? null;
+        setUser(u);
+        // don't call Supabase inside this callback directly; defer it
+        setTimeout(() => checkReviewer(u), 0);
       }
     );
     return () => listener.subscription.unsubscribe();
@@ -41,6 +58,15 @@ export default function Header() {
       <div className="nav-right">
         {user && (
           <>
+            {isReviewer && (
+              <Link
+                className="nav-link"
+                href="/review"
+                aria-current={path === '/review' ? 'page' : undefined}
+              >
+                {t('review')}
+              </Link>
+            )}
             <Link
               className="nav-link"
               href="/my-entries"
