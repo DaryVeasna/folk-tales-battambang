@@ -52,7 +52,8 @@ export default function EntryList({ entries }) {
         <input
           type="text"
           className="search-input"
-          placeholder="[Search a word]"
+          placeholder="Search a word"
+          aria-label="Search a word"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -62,7 +63,7 @@ export default function EntryList({ entries }) {
       </div>
 
       {filtered.length === 0 ? (
-        <p style={styles.empty}>[No results found]</p>
+        <p style={styles.empty}>No results found</p>
       ) : (
         <>
           <div className="entry-grid">
