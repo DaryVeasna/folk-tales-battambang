@@ -203,8 +203,8 @@ export default function EntryForm({ entry = null }) {
       <main className="form-wrap wide">
         <p className="form-subtitle">Contribution is processing, one moment...</p>
         <p>
-          <Link href="/contribute" className="text-link">
-            Back to contribute
+          <Link href="/my-entries" className="text-link">
+            View my entries
           </Link>
         </p>
       </main>
